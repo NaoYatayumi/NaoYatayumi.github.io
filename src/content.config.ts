@@ -21,6 +21,7 @@ const projects = defineCollection({
 			editedAt: z.coerce.date().optional(),
 			image: image(),
 			status: z.enum(["current", "former"]).default("former"),
+			category: z.enum(["game", "script"]).default("game"),
 			links: z.array(
 				z.object({
 					text: z.string(),

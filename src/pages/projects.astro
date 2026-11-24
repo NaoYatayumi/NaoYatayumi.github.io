@@ -7,8 +7,8 @@ import PostList from "../components/PostList.astro";
 
 const allProjects = await getCollection("projects", (post) => post.data.unlisted !== true);
 
-const currentProjects = allProjects.filter((post) => post.data.status === "current");
-const formerProjects = allProjects.filter((post) => post.data.status === "former");
+const gameProjects = allProjects.filter((post) => post.data.category === "game");
+const scriptProjects = allProjects.filter((post) => post.data.category === "script");
 
 const toPostProps = (post: typeof allProjects[number]) => ({
 	url: `/projects/${post.id}`,
@@ -29,27 +29,36 @@ const toPostProps = (post: typeof allProjects[number]) => ({
 		<Card title="Stats" icon="lucide/chart-column">
 			<div class="stat-list">
 				<div class="stat">
-					<h3 class="stat__number">{allProjects.length}</h3>
-					<span class="stat__label">project{allProjects.length === 1 ? '' : 's'}</span>
+					<h3 class="stat__number">{gameProjects.length}</h3>
+					<span class="stat__label">game project{gameProjects.length === 1 ? '' : 's'}</span>
+				</div>
+				<div class="stat">
+					<h3 class="stat__number">{scriptProjects.length}</h3>
+					<span class="stat__label">script project{scriptProjects.length === 1 ? '' : 's'}</span>
 				</div>
 			</div>
 		</Card>
 	</div>
 	<div class="layout-grid__right" slot="right">
-		{currentProjects.length > 0 && (
-			<Card title="Currently working on / at" icon="lucide/folder-git" id="current-projects-card">
-				<PostList posts={currentProjects.map(toPostProps)} />
-			</Card>
-		)}
-		{formerProjects.length > 0 && (
-			<Card title="Formerly worked on / at" icon="lucide/folder-git" id="former-projects-card">
-				<PostList posts={formerProjects.map(toPostProps)} />
-			</Card>
-		)}
+		<Card title="Game projects" icon="lucide/gamepad-2" id="game-projects-card">
+			{gameProjects.length > 0
+				? <PostList posts={gameProjects.map(toPostProps)} />
+				: <p class="empty-message">No game projects yet.</p>}
+		</Card>
+		<Card title="Script projects" icon="lucide/code-xml" id="script-projects-card">
+			{scriptProjects.length > 0
+				? <PostList posts={scriptProjects.map(toPostProps)} />
+				: <p class="empty-message">No script projects yet.</p>}
+		</Card>
 	</div>
 </Layout>
 
 <style>
+	.empty-message {
+		margin: 0;
+		color: var(--color-subtext0);
+	}
+
 	.stat-list {
 		display: flex;
 		flex-direction: column;
